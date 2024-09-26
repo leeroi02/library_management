@@ -1,0 +1,97 @@
+<html>
+<head>
+    <title>Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        li {
+            background-color: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        form {
+            display: inline;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="text"], input[type="date"] {
+            padding: 8px;
+            margin: 0 10px 0 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus, input[type="date"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .borrowed {
+            color: #ff6347;
+        }
+    </style>
+</head>
+<body>
+    <h1>Books in Library</h1>
+    <ul>
+        {% for book in books %}
+        <li>
+            <span>{{ book.title }} ({{ book.author.name }})</span>
+            {% if book.borrowed_by %}
+            <span class="borrowed">- Borrowed by: {{ book.borrowed_by }} (Due: {{ book.due_date }})</span>
+            {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                {{ form.borrowed_by }} {{ form.due_date }}
+                <button type="submit">Borrow</button>
+            </form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
